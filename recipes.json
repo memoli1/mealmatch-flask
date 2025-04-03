@@ -1,0 +1,22 @@
+{
+    "recipes": [
+        {
+            "name": "Spaghetti Carbonara",
+            "ingredients": ["spaghetti", "eggs", "bacon", "parmesan cheese", "black pepper"],
+            "instructions": "1. Cook spaghetti according to package instructions\n2. Fry bacon until crispy\n3. Beat eggs with parmesan and black pepper\n4. Mix everything together while pasta is hot",
+            "vegetarian": false
+        },
+        {
+            "name": "Vegetable Stir Fry",
+            "ingredients": ["rice", "bell peppers", "carrots", "broccoli", "soy sauce", "garlic"],
+            "instructions": "1. Cook rice according to package instructions\n2. Stir fry vegetables with garlic\n3. Add soy sauce and mix with rice",
+            "vegetarian": true
+        },
+        {
+            "name": "Chicken Salad",
+            "ingredients": ["chicken breast", "lettuce", "tomatoes", "cucumber", "olive oil", "lemon juice"],
+            "instructions": "1. Cook and shred chicken breast\n2. Chop vegetables\n3. Mix with olive oil and lemon juice",
+            "vegetarian": false
+        }
+    ]
+} 

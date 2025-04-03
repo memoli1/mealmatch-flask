@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="search-header">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2>Find the Perfect Recipe</h2>
+                <p class="text-secondary mb-4">Enter your available ingredients and discover delicious recipes you can make right now</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card recipe-card">
+                <div class="card-body">
+                    <div id="error-message" class="alert alert-warning d-none" role="alert"></div>
+                    
+                    <form id="search-form" class="ingredients-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        
+                        <div class="ingredients-container">
+                            <label for="ingredients" class="form-label ingredients-label">What ingredients do you have?</label>
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
+                                   id="ingredients" 
+                                   name="ingredients" 
+                                   placeholder="e.g., chicken, rice, tomatoes" 
+                                   required>
+                            <div class="form-text text-secondary">Separate ingredients with commas</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="vegetarian" name="vegetarian" value="true">
+                                <label class="form-check-label" for="vegetarian">
+                                    <i class="bi bi-egg me-2"></i>Show only vegetarian recipes
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-search me-2"></i>Find Recipes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommended Recipes Section -->
+    <div class="recommended-section">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h3 class="recommended-title">
+                    <i class="bi bi-star-fill me-2"></i>
+                    Recommended Recipes
+                </h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card recipe-card h-100">
+                            <div class="card-body">
+                                <div class="recipe-header">
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-egg-fill me-1"></i>Vegetarian
+                                    </span>
+                                </div>
+                                <div class="recipe-content">
+                                    <div class="recipe-title">
+                                        <span class="recipe-emoji">🍝</span>
+                                        <h4>Creamy Garlic Pasta</h4>
+                                    </div>
+                                    <p>Quick pasta dish with a rich garlic cream sauce</p>
+                                </div>
+                                <div class="card-footer-content">
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="bi bi-arrow-right me-1"></i>View Recipe
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card recipe-card h-100">
+                            <div class="card-body">
+                                <div class="recipe-header">
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-egg-fill me-1"></i>Vegetarian
+                                    </span>
+                                </div>
+                                <div class="recipe-content">
+                                    <div class="recipe-title">
+                                        <span class="recipe-emoji">🥗</span>
+                                        <h4>Mediterranean Quinoa Bowl</h4>
+                                    </div>
+                                    <p>Healthy bowl with quinoa, fresh vegetables, and feta</p>
+                                </div>
+                                <div class="card-footer-content">
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="bi bi-arrow-right me-1"></i>View Recipe
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card recipe-card h-100">
+                            <div class="card-body">
+                                <div class="recipe-content">
+                                    <div class="recipe-title">
+                                        <span class="recipe-emoji">🍗</span>
+                                        <h4>Honey Glazed Chicken</h4>
+                                    </div>
+                                    <p>Sweet and savory chicken with honey soy glaze</p>
+                                </div>
+                                <div class="card-footer-content">
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="bi bi-arrow-right me-1"></i>View Recipe
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('search-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const ingredients = document.getElementById('ingredients').value.split(',').map(ing => ing.trim());
+    const vegetarian = document.getElementById('vegetarian').checked;
+    
+    try {
+        const response = await fetch('/api/search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('input[name="csrf_token"]').value
+            },
+            body: JSON.stringify({
+                ingredients: ingredients,
+                vegetarian: vegetarian
+            })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'An error occurred');
+        }
+        
+        const data = await response.json();
+        window.location.href = '/results?data=' + encodeURIComponent(JSON.stringify(data));
+        
+    } catch (error) {
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.textContent = error.message;
+        errorDiv.classList.remove('d-none');
+    }
+});
+</script>
+{% endblock %} 
