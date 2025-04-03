@@ -1,12 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    .search-header {
+        background-image: url('/static/images/i.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        padding: 100px 0;
+        color: white;
+    }
+
+    .search-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* dark overlay */
+        z-index: 0;
+    }
+
+    .search-header .container {
+        position: relative;
+        z-index: 1;
+    }
+</style>
+
 <div class="search-header">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
                 <h2>Find the Perfect Recipe</h2>
-                <p class="text-secondary mb-4">Enter your available ingredients and discover delicious recipes you can make right now</p>
+                <p class="text-light mb-4">
+                    Enter your available ingredients and discover delicious recipes you can make right now
+                </p>
             </div>
         </div>
     </div>
@@ -18,21 +48,21 @@
             <div class="card recipe-card">
                 <div class="card-body">
                     <div id="error-message" class="alert alert-warning d-none" role="alert"></div>
-                    
+
                     <form id="search-form" class="ingredients-form">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        
+
                         <div class="ingredients-container">
                             <label for="ingredients" class="form-label ingredients-label">What ingredients do you have?</label>
-                            <input type="text" 
-                                   class="form-control form-control-lg" 
-                                   id="ingredients" 
-                                   name="ingredients" 
-                                   placeholder="e.g., chicken, rice, tomatoes" 
+                            <input type="text"
+                                   class="form-control form-control-lg"
+                                   id="ingredients"
+                                   name="ingredients"
+                                   placeholder="e.g., chicken, rice, tomatoes"
                                    required>
                             <div class="form-text text-secondary">Separate ingredients with commas</div>
                         </div>
-                        
+
                         <div class="mb-4">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="vegetarian" name="vegetarian" value="true">
@@ -41,7 +71,7 @@
                                 </label>
                             </div>
                         </div>
-                        
+
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="bi bi-search me-2"></i>Find Recipes
@@ -54,14 +84,15 @@
     </div>
 
     <!-- Recommended Recipes Section -->
-    <div class="recommended-section">
+    <div class="recommended-section mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <h3 class="recommended-title">
+                <h3 class="recommended-title text-white">
                     <i class="bi bi-star-fill me-2"></i>
                     Recommended Recipes
                 </h3>
                 <div class="row">
+                    <!-- Recipe card 1 -->
                     <div class="col-md-4">
                         <div class="card recipe-card h-100">
                             <div class="card-body">
@@ -85,6 +116,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Recipe card 2 -->
                     <div class="col-md-4">
                         <div class="card recipe-card h-100">
                             <div class="card-body">
@@ -108,6 +141,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Recipe card 3 -->
                     <div class="col-md-4">
                         <div class="card recipe-card h-100">
                             <div class="card-body">
@@ -130,36 +165,31 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <script>
 document.getElementById('search-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-    
-    const ingredients = document.getElementById('ingredients').value.split(',').map(ing => ing.trim());
+
+    const ingredients = document.getElementById('ingredients').value;
     const vegetarian = document.getElementById('vegetarian').checked;
-    
+
     try {
-        const response = await fetch('/api/search', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('input[name="csrf_token"]').value
-            },
-            body: JSON.stringify({
-                ingredients: ingredients,
-                vegetarian: vegetarian
-            })
-        });
-        
+        const response = await fetch(`/api/recipes?ingredients=${encodeURIComponent(ingredients)}`);
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.error || 'An error occurred');
+            throw new Error(error.error || 'Failed to fetch recipes');
         }
-        
-        const data = await response.json();
-        window.location.href = '/results?data=' + encodeURIComponent(JSON.stringify(data));
-        
+
+        const recipes = await response.json();
+        const filteredRecipes = vegetarian ? recipes.filter(r => r.vegetarian) : recipes;
+
+        if (filteredRecipes.length === 0) {
+            throw new Error('No recipes found for your ingredients');
+        }
+
+        window.location.href = '/results?data=' + encodeURIComponent(JSON.stringify(filteredRecipes));
     } catch (error) {
         const errorDiv = document.getElementById('error-message');
         errorDiv.textContent = error.message;
@@ -167,4 +197,4 @@ document.getElementById('search-form').addEventListener('submit', async function
     }
 });
 </script>
-{% endblock %} 
+{% endblock %}

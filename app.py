@@ -3,10 +3,20 @@ from flask_wtf.csrf import CSRFProtect
 import json
 from typing import List, Dict, Tuple
 import os
+import requests
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+api_key = os.getenv("SPOONACULAR_API_KEY")
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['SECRET_KEY'] = 'your-secret-key-here'  # Change this to a secure secret key
 csrf = CSRFProtect(app)
+
+# Spoonacular API configuration
+SPOONACULAR_API_KEY = os.getenv('SPOONACULAR_API_KEY')
+SPOONACULAR_BASE_URL = 'https://api.spoonacular.com'
 
 def load_recipes():
     try:
@@ -164,6 +174,128 @@ def toggle_favorite():
     
     save_favorites(favorites)
     return jsonify({'status': 'success'})
+
+@app.route('/api/recipes')
+def get_recipes():
+    if not SPOONACULAR_API_KEY:
+        return jsonify({'error': 'Spoonacular API key not configured'}), 500
+        
+    # Get ingredients from query parameter
+    ingredients = request.args.get('ingredients', '')
+    print(f"Searching for ingredients: {ingredients}")
+    
+    if not ingredients:
+        return jsonify({'error': 'No ingredients provided'}), 400
+    
+    try:
+        # First, find recipes by ingredients
+        search_endpoint = f"{SPOONACULAR_BASE_URL}/recipes/findByIngredients"
+        search_params = {
+            'apiKey': SPOONACULAR_API_KEY,
+            'ingredients': ingredients,
+            'number': 5,
+            'ranking': 2,
+            'ignorePantry': True
+        }
+        
+        print(f"Making request to Spoonacular: {search_endpoint}")
+        print(f"With params: {search_params}")
+        
+        # Make request to find recipes
+        search_response = requests.get(search_endpoint, params=search_params)
+        search_response.raise_for_status()
+        
+        # Get the initial recipes and print the raw response
+        initial_recipes = search_response.json()
+        print(f"Status Code: {search_response.status_code}")
+        print(f"Response Headers: {dict(search_response.headers)}")
+        print("Raw Spoonacular Response:", json.dumps(initial_recipes, indent=2))
+        
+        if not initial_recipes:
+            return jsonify({'error': 'No recipes found'}), 404
+            
+        detailed_recipes = []
+        
+        for recipe in initial_recipes:
+            try:
+                recipe_id = recipe.get('id')
+                if not recipe_id:
+                    print(f"Skipping recipe without ID: {recipe}")
+                    continue
+                
+                print(f"Processing recipe ID: {recipe_id}")
+                
+                # Get full recipe details
+                info_response = requests.get(
+                    f"{SPOONACULAR_BASE_URL}/recipes/{recipe_id}/information",
+                    params={'apiKey': SPOONACULAR_API_KEY}
+                )
+                info_response.raise_for_status()
+                recipe_info = info_response.json()
+                
+                # Extract used and missed ingredients directly from the search response
+                used_ingredients = recipe.get('usedIngredients', [])
+                missed_ingredients = recipe.get('missedIngredients', [])
+                
+                print(f"Recipe {recipe_id} ingredients:")
+                print(f"- Used ingredients: {used_ingredients}")
+                print(f"- Missed ingredients: {missed_ingredients}")
+                
+                # Calculate match percentage
+                used_count = recipe.get('usedIngredientCount', 0)
+                missed_count = recipe.get('missedIngredientCount', 0)
+                total_count = used_count + missed_count
+                match_percentage = (used_count / total_count * 100) if total_count > 0 else 0
+                
+                detailed_recipe = {
+                    'id': recipe_id,
+                    'name': recipe_info.get('title', ''),
+                    'image': recipe_info.get('image', ''),
+                    'ingredients': [
+                        ing.get('original', '')
+                        for ing in recipe_info.get('extendedIngredients', [])
+                    ],
+                    'instructions': [
+                        step.get('step', '').strip()
+                        for instruction in recipe_info.get('analyzedInstructions', [])
+                        for step in instruction.get('steps', [])
+                    ] or [step.strip() for step in recipe_info.get('instructions', '').split('\n') if step.strip()],
+                    'vegetarian': recipe_info.get('vegetarian', False),
+                    'match_percentage': match_percentage,
+                    'missing_ingredients': [
+                        ing.get('original', '')
+                        for ing in missed_ingredients
+                    ],
+                    'preparationMinutes': recipe_info.get('preparationMinutes'),
+                    'cookingMinutes': recipe_info.get('cookingMinutes'),
+                    'servings': recipe_info.get('servings'),
+                    'sourceUrl': recipe_info.get('sourceUrl', ''),
+                    'summary': recipe_info.get('summary', '')
+                }
+                
+                detailed_recipes.append(detailed_recipe)
+                print(f"Successfully processed recipe {recipe_id}")
+                
+            except Exception as e:
+                print(f"Error processing recipe {recipe_id}: {str(e)}")
+                print(f"Recipe data: {json.dumps(recipe, indent=2)}")
+                continue
+        
+        if not detailed_recipes:
+            return jsonify({'error': 'No valid recipes found'}), 404
+            
+        return jsonify(detailed_recipes)
+        
+    except requests.exceptions.RequestException as e:
+        error_message = f"Error fetching recipes: {str(e)}"
+        print(error_message)
+        print(f"Full error: {e.__class__.__name__}: {str(e)}")
+        return jsonify({'error': error_message}), 500
+    except Exception as e:
+        error_message = f"Unexpected error: {str(e)}"
+        print(error_message)
+        print(f"Full error: {e.__class__.__name__}: {str(e)}")
+        return jsonify({'error': error_message}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001) 

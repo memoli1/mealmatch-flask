@@ -97,7 +97,13 @@
                                     <h5 class="section-title">
                                         <i class="bi bi-journal-text"></i>Instructions
                                     </h5>
-                                    <div class="instructions">{{ recipe.instructions }}</div>
+                                    <div class="instructions">
+                                        <ol>
+                                        {% for step in recipe.instructions %}
+                                            <li>{{ step }}</li>
+                                        {% endfor %}
+                                        </ol>
+                                    </div>
                                 </div>
                             </div>
                         </div>
