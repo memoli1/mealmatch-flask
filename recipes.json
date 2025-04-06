@@ -1,22 +1,47 @@
 {
     "recipes": [
         {
-            "name": "Spaghetti Carbonara",
-            "ingredients": ["spaghetti", "eggs", "bacon", "parmesan cheese", "black pepper"],
-            "instructions": "1. Cook spaghetti according to package instructions\n2. Fry bacon until crispy\n3. Beat eggs with parmesan and black pepper\n4. Mix everything together while pasta is hot",
-            "vegetarian": false
+            "title": "Classic Spaghetti Carbonara",
+            "ingredients": [
+                "350g spaghetti",
+                "150g pancetta",
+                "3 large eggs",
+                "75g Pecorino Romano",
+                "50g Parmigiano Reggiano",
+                "2 cloves garlic",
+                "black pepper",
+                "salt"
+            ],
+            "instructions": "1. Cook pasta in salted water\n2. Fry pancetta until crispy\n3. Beat eggs with cheese and pepper\n4. Toss hot pasta with pancetta\n5. Mix in egg mixture off heat\n6. Serve immediately with more cheese",
+            "vegetarian": false,
+            "image_url": "https://blog.giallozafferano.it/dulcisinforno/wp-content/uploads/2021/03/Carbonara-ricetta-5328.jpg"
         },
         {
-            "name": "Vegetable Stir Fry",
-            "ingredients": ["rice", "bell peppers", "carrots", "broccoli", "soy sauce", "garlic"],
-            "instructions": "1. Cook rice according to package instructions\n2. Stir fry vegetables with garlic\n3. Add soy sauce and mix with rice",
-            "vegetarian": true
-        },
-        {
-            "name": "Chicken Salad",
-            "ingredients": ["chicken breast", "lettuce", "tomatoes", "cucumber", "olive oil", "lemon juice"],
-            "instructions": "1. Cook and shred chicken breast\n2. Chop vegetables\n3. Mix with olive oil and lemon juice",
-            "vegetarian": false
-        }
+            "title": "Spaghetti all'Amatriciana",
+            "ingredients": [
+              "400g spaghetti",
+              "150g guanciale",
+              "400g peeled tomatoes",
+              "50g Pecorino Romano",
+              "1 red chili (optional)",
+              "2 tbsp olive oil",
+              "salt"
+            ],
+            "instructions": "1. Cut guanciale into strips and sauté in olive oil until crispy\n2. Add chili and peeled tomatoes, simmer for 10-15 minutes\n3. Cook spaghetti in salted water\n4. Mix pasta with sauce and add Pecorino Romano\n5. Serve hot with more cheese if desired",
+            "vegetarian": false,
+            "image_url": "https://www.lacucinaitaliana.it/content/uploads/2021/09/amatriciana.jpg"
+          },
+          {
+            "title": "Tonnarelli Cacio e Pepe",
+            "ingredients": [
+              "400g tonnarelli (or spaghetti)",
+              "200g Pecorino Romano",
+              "2 tsp freshly ground black pepper",
+              "salt"
+            ],
+            "instructions": "1. Cook pasta in salted water\n2. Reserve some pasta water\n3. Mix grated cheese with black pepper\n4. Add hot pasta to cheese mixture\n5. Add a bit of pasta water to create creamy sauce\n6. Serve immediately with more pepper",
+            "vegetarian": true,
+            "image_url": "https://blog.giallozafferano.it/dulcisinforno/wp-content/uploads/2020/05/Cacio-e-pepe-ricetta-7697.jpg"
+          }
     ]
 } 

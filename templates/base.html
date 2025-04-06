@@ -1,21 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ g.get('lang_code', 'en') }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MealMatch - Find Recipes with Your Ingredients</title>
+    <title>{{ _('MealMatch - Find Recipes with Your Ingredients') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+        .navbar {
+            background-color: #007bff;
+            padding: 1rem;
+        }
+        .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .navbar-brand i {
+            margin-right: 0.5rem;
+            color: #007bff;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.85) !important;
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: white !important;
+        }
+        .nav-link.active {
+            color: white !important;
+            font-weight: 500;
+        }
+        .nav-link i {
+            margin-right: 0.5rem;
+        }
+        .navbar-toggler {
+            border-color: rgba(255,255,255,0.5);
+        }
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
+            <!-- Logo -->
             <a class="navbar-brand" href="/">
                 <i class="bi bi-egg-fried"></i>
                 <span>MealMatch</span>
             </a>
+
+            <!-- Hamburger menu for mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navigation items -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <!-- Left-aligned nav items -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}">
+                            <i class="bi bi-house"></i>{{ _('Home') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'ricettario' %}active{% endif %}" href="{{ url_for('ricettario') }}">
+                            <i class="bi bi-book"></i>{{ _('Recipe Book') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="favoritesLink">
+                            <i class="bi bi-heart"></i>{{ _('Favorites') }}
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Right-aligned language selector -->
+                <div class="language-selector">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="languageDropdown" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-globe"></i>
+                            <span class="current-language">{{ g.languages[g.get('lang_code', 'en')] }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            {% for code, name in g.languages.items() %}
+                            <li>
+                                <a class="dropdown-item {% if g.get('lang_code') == code %}active{% endif %}" 
+                                   href="{{ url_for(request.endpoint, lang=code, **request.view_args) }}"
+                                   data-lang="{{ code }}">
+                                    {{ name }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -28,7 +114,7 @@
             <div class="row">
                 <div class="col-md-8 mx-auto text-center">
                     <p class="text-secondary mb-0">
-                        <small>Made with <i class="bi bi-heart-fill text-danger"></i> for food lovers</small>
+                        <small>{{ _('Made with') }} <i class="bi bi-heart-fill text-danger"></i> {{ _('for food lovers') }}</small>
                     </p>
                 </div>
             </div>
@@ -36,5 +122,34 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const languageItems = document.querySelectorAll('.dropdown-item[data-lang]');
+            const currentLanguageSpan = document.querySelector('.current-language');
+            
+            // Load saved language preference
+            const savedLanguage = localStorage.getItem('selectedLanguage');
+            if (savedLanguage) {
+                const savedItem = document.querySelector(`.dropdown-item[data-lang="${savedLanguage}"]`);
+                if (savedItem) {
+                    // Update the current language display
+                    currentLanguageSpan.textContent = savedItem.textContent;
+                    
+                    // If the saved language is different from the current page language,
+                    // redirect to the saved language version
+                    if (savedLanguage !== '{{ g.get("lang_code", "en") }}') {
+                        window.location.href = savedItem.href;
+                    }
+                }
+            }
+            
+            languageItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Store selected language in localStorage
+                    localStorage.setItem('selectedLanguage', this.dataset.lang);
+                });
+            });
+        });
+    </script>
 </body>
 </html> 

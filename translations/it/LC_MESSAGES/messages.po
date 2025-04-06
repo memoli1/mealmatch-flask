@@ -1,0 +1,137 @@
+# Italian translations for MealMatch.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the MealMatch project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-04-03 20:43+0200\n"
+"PO-Revision-Date: 2024-04-03 20:43+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: it\n"
+"Language-Team: it <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+msgid "MealMatch - Find Recipes with Your Ingredients"
+msgstr "MealMatch - Trova Ricette con i Tuoi Ingredienti"
+
+msgid "Find the Perfect Recipe"
+msgstr "Trova la Ricetta Perfetta"
+
+msgid "Enter your available ingredients and discover delicious recipes you can make right now"
+msgstr "Inserisci gli ingredienti disponibili e scopri deliziose ricette da preparare subito"
+
+msgid "What ingredients do you have?"
+msgstr "Quali ingredienti hai?"
+
+msgid "e.g., chicken, rice, tomatoes"
+msgstr "es. pollo, riso, pomodori"
+
+msgid "Separate ingredients with commas"
+msgstr "Separa gli ingredienti con le virgole"
+
+msgid "Show only vegetarian recipes"
+msgstr "Mostra solo ricette vegetariane"
+
+msgid "Find Recipes"
+msgstr "Trova Ricette"
+
+msgid "Recommended Recipes"
+msgstr "Ricette Raccomandate"
+
+msgid "Vegetarian"
+msgstr "Vegetariano"
+
+msgid "Creamy Garlic Pasta"
+msgstr "Pasta Cremosa all'Aglio"
+
+msgid "Quick pasta dish with a rich garlic cream sauce"
+msgstr "Pasta veloce con una ricca salsa cremosa all'aglio"
+
+msgid "Mediterranean Quinoa Bowl"
+msgstr "Bowl di Quinoa Mediterranea"
+
+msgid "Healthy bowl with quinoa, fresh vegetables, and feta"
+msgstr "Bowl salutare con quinoa, verdure fresche e feta"
+
+msgid "Honey Glazed Chicken"
+msgstr "Pollo Glassato al Miele"
+
+msgid "Sweet and savory chicken with honey soy glaze"
+msgstr "Pollo dolce e saporito con glassa di miele e soia"
+
+msgid "View Recipe"
+msgstr "Vedi Ricetta"
+
+msgid "Failed to fetch recipes"
+msgstr "Impossibile recuperare le ricette"
+
+msgid "No recipes found for your ingredients"
+msgstr "Nessuna ricetta trovata con i tuoi ingredienti"
+
+msgid "Made with"
+msgstr "Fatto con"
+
+msgid "for food lovers"
+msgstr "per gli amanti del cibo"
+
+msgid "English"
+msgstr "Inglese"
+
+msgid "Italiano"
+msgstr "Italiano"
+
+msgid "Search Results"
+msgstr "Risultati della Ricerca"
+
+msgid "Showing recipes matching:"
+msgstr "Ricette che corrispondono a:"
+
+msgid "Showing only vegetarian recipes"
+msgstr "Solo ricette vegetariane"
+
+msgid "New Search"
+msgstr "Nuova Ricerca"
+
+msgid "Top Match"
+msgstr "Miglior Risultato"
+
+msgid "Match"
+msgstr "Corrispondenza"
+
+msgid "Save as Favorite"
+msgstr "Salva nei Preferiti"
+
+msgid "Saved as Favorite"
+msgstr "Salvato nei Preferiti"
+
+msgid "Copy Recipe"
+msgstr "Copia Ricetta"
+
+msgid "Copied!"
+msgstr "Copiato!"
+
+msgid "Ingredients"
+msgstr "Ingredienti"
+
+msgid "Missing Ingredients"
+msgstr "Ingredienti Mancanti"
+
+msgid "Instructions"
+msgstr "Istruzioni"
+
+msgid "and vegetarian filter"
+msgstr "e il filtro vegetariano"
+
+msgid "Try a different combination!"
+msgstr "Prova una combinazione diversa!"
+
+msgid "Failed to copy recipe to clipboard"
+msgstr "Impossibile copiare la ricetta negli appunti"
+

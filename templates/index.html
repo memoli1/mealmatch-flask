@@ -33,9 +33,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
-                <h2>Find the Perfect Recipe</h2>
+                <h2>{{ _('Find the Perfect Recipe') }}</h2>
                 <p class="text-light mb-4">
-                    Enter your available ingredients and discover delicious recipes you can make right now
+                    {{ _('Enter your available ingredients and discover delicious recipes you can make right now') }}
                 </p>
             </div>
         </div>
@@ -53,28 +53,28 @@
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                         <div class="ingredients-container">
-                            <label for="ingredients" class="form-label ingredients-label">What ingredients do you have?</label>
-                            <input type="text"
-                                   class="form-control form-control-lg"
+                            <label for="ingredients" class="form-label ingredients-label">{{ _('What ingredients do you have?') }}</label>
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
                                    id="ingredients"
                                    name="ingredients"
-                                   placeholder="e.g., chicken, rice, tomatoes"
+                                   placeholder="{{ _('e.g., chicken, rice, tomatoes') }}"
                                    required>
-                            <div class="form-text text-secondary">Separate ingredients with commas</div>
+                            <div class="form-text text-secondary">{{ _('Separate ingredients with commas') }}</div>
                         </div>
-
+                        
                         <div class="mb-4">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="vegetarian" name="vegetarian" value="true">
                                 <label class="form-check-label" for="vegetarian">
-                                    <i class="bi bi-egg me-2"></i>Show only vegetarian recipes
+                                    <i class="bi bi-egg me-2"></i>{{ _('Show only vegetarian recipes') }}
                                 </label>
                             </div>
                         </div>
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-search me-2"></i>Find Recipes
+                                <i class="bi bi-search me-2"></i>{{ _('Find Recipes') }}
                             </button>
                         </div>
                     </form>
@@ -89,7 +89,7 @@
             <div class="col-md-8">
                 <h3 class="recommended-title text-white">
                     <i class="bi bi-star-fill me-2"></i>
-                    Recommended Recipes
+                    {{ _('Recommended Recipes') }}
                 </h3>
                 <div class="row">
                     <!-- Recipe card 1 -->
@@ -98,19 +98,19 @@
                             <div class="card-body">
                                 <div class="recipe-header">
                                     <span class="badge bg-success">
-                                        <i class="bi bi-egg-fill me-1"></i>Vegetarian
+                                        <i class="bi bi-egg-fill me-1"></i>{{ _('Vegetarian') }}
                                     </span>
                                 </div>
                                 <div class="recipe-content">
                                     <div class="recipe-title">
                                         <span class="recipe-emoji">🍝</span>
-                                        <h4>Creamy Garlic Pasta</h4>
+                                        <h4>{{ _('Creamy Garlic Pasta') }}</h4>
                                     </div>
-                                    <p>Quick pasta dish with a rich garlic cream sauce</p>
+                                    <p>{{ _('Quick pasta dish with a rich garlic cream sauce') }}</p>
                                 </div>
                                 <div class="card-footer-content">
                                     <button class="btn btn-primary btn-sm">
-                                        <i class="bi bi-arrow-right me-1"></i>View Recipe
+                                        <i class="bi bi-arrow-right me-1"></i>{{ _('View Recipe') }}
                                     </button>
                                 </div>
                             </div>
@@ -123,19 +123,19 @@
                             <div class="card-body">
                                 <div class="recipe-header">
                                     <span class="badge bg-success">
-                                        <i class="bi bi-egg-fill me-1"></i>Vegetarian
+                                        <i class="bi bi-egg-fill me-1"></i>{{ _('Vegetarian') }}
                                     </span>
                                 </div>
                                 <div class="recipe-content">
                                     <div class="recipe-title">
                                         <span class="recipe-emoji">🥗</span>
-                                        <h4>Mediterranean Quinoa Bowl</h4>
+                                        <h4>{{ _('Mediterranean Quinoa Bowl') }}</h4>
                                     </div>
-                                    <p>Healthy bowl with quinoa, fresh vegetables, and feta</p>
+                                    <p>{{ _('Healthy bowl with quinoa, fresh vegetables, and feta') }}</p>
                                 </div>
                                 <div class="card-footer-content">
                                     <button class="btn btn-primary btn-sm">
-                                        <i class="bi bi-arrow-right me-1"></i>View Recipe
+                                        <i class="bi bi-arrow-right me-1"></i>{{ _('View Recipe') }}
                                     </button>
                                 </div>
                             </div>
@@ -149,13 +149,13 @@
                                 <div class="recipe-content">
                                     <div class="recipe-title">
                                         <span class="recipe-emoji">🍗</span>
-                                        <h4>Honey Glazed Chicken</h4>
+                                        <h4>{{ _('Honey Glazed Chicken') }}</h4>
                                     </div>
-                                    <p>Sweet and savory chicken with honey soy glaze</p>
+                                    <p>{{ _('Sweet and savory chicken with honey soy glaze') }}</p>
                                 </div>
                                 <div class="card-footer-content">
                                     <button class="btn btn-primary btn-sm">
-                                        <i class="bi bi-arrow-right me-1"></i>View Recipe
+                                        <i class="bi bi-arrow-right me-1"></i>{{ _('View Recipe') }}
                                     </button>
                                 </div>
                             </div>
@@ -165,31 +165,39 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <script>
 document.getElementById('search-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-
+    
     const ingredients = document.getElementById('ingredients').value;
     const vegetarian = document.getElementById('vegetarian').checked;
-
+    const lang = localStorage.getItem('selectedLanguage') || '{{ g.get("lang_code", "en") }}';
+    
     try {
-        const response = await fetch(`/api/recipes?ingredients=${encodeURIComponent(ingredients)}`);
+        // Get recipes from database
+        const queryParams = new URLSearchParams({
+            ingredients: ingredients,
+            vegetarian: vegetarian,
+            lang: lang
+        });
+        
+        const response = await fetch(`/api/recipes?${queryParams}`);
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.error || 'Failed to fetch recipes');
+            throw new Error(error.error || '{{ _('Failed to fetch recipes') }}');
         }
-
+        
         const recipes = await response.json();
-        const filteredRecipes = vegetarian ? recipes.filter(r => r.vegetarian) : recipes;
-
-        if (filteredRecipes.length === 0) {
-            throw new Error('No recipes found for your ingredients');
+        
+        if (recipes.length === 0) {
+            throw new Error('{{ _('No recipes found for your ingredients') }}');
         }
-
-        window.location.href = '/results?data=' + encodeURIComponent(JSON.stringify(filteredRecipes));
+        
+        // Redirect to results page with the recipes data
+        window.location.href = `/results?data=${encodeURIComponent(JSON.stringify(recipes))}&lang=${lang}`;
+        
     } catch (error) {
         const errorDiv = document.getElementById('error-message');
         errorDiv.textContent = error.message;

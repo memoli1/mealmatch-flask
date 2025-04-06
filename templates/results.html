@@ -5,15 +5,15 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 mx-auto text-center">
-                <h2 class="mb-3">Search Results</h2>
-                <p class="lead">Showing recipes matching: <strong>{{ search_term }}</strong></p>
+                <h2 class="mb-3">{{ _('Search Results') }}</h2>
+                <p class="lead">{{ _('Showing recipes matching:') }} <strong>{{ search_term }}</strong></p>
                 {% if vegetarian_only %}
                 <p class="text-white">
-                    <i class="bi bi-egg me-1"></i>Showing only vegetarian recipes
+                    <i class="bi bi-egg me-1"></i>{{ _('Showing only vegetarian recipes') }}
                 </p>
                 {% endif %}
-                <a href="{{ url_for('home') }}" class="btn btn-light btn-lg">
-                    <i class="bi bi-arrow-left me-2"></i>New Search
+                <a href="/?lang={{ g.get('lang_code', 'en') }}" class="btn btn-light btn-lg">
+                    <i class="bi bi-arrow-left me-2"></i>{{ _('New Search') }}
                 </a>
             </div>
         </div>
@@ -31,36 +31,36 @@
                             <div>
                                 <h3 class="card-title mb-1">
                                     <span class="recipe-emoji me-2">{{ recipe.emoji }}</span>
-                                    {{ recipe.name }}
+                                    {{ recipe.title }}
                                 </h3>
                                 <div class="d-flex gap-2">
                                     {% if recipe.match_percentage >= 80 %}
                                     <span class="badge bg-warning text-dark">
-                                        <i class="bi bi-star-fill me-1"></i>Top Match
+                                        <i class="bi bi-star-fill me-1"></i>{{ _('Top Match') }}
                                     </span>
                                     {% endif %}
                                     {% if recipe.vegetarian %}
                                     <span class="badge bg-success">
-                                        <i class="bi bi-egg me-1"></i>Vegetarian
+                                        <i class="bi bi-egg me-1"></i>{{ _('Vegetarian') }}
                                     </span>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <span class="badge bg-primary match-score">
-                                    {{ "%.1f"|format(recipe.match_percentage) }}% Match
+                                    {{ "%.1f"|format(recipe.match_percentage) }}% {{ _('Match') }}
                                 </span>
                                 <button class="btn btn-outline-primary favorite-btn" 
-                                        data-recipe="{{ recipe.name }}">
+                                        data-recipe="{{ recipe.title }}">
                                     <i class="bi bi-heart"></i>
-                                    <span class="favorite-text">Save as Favorite</span>
+                                    <span class="favorite-text">{{ _('Save as Favorite') }}</span>
                                 </button>
                                 <button class="btn btn-outline-secondary copy-recipe-btn" 
-                                        data-recipe="{{ recipe.name }}"
+                                        data-recipe="{{ recipe.title }}"
                                         data-ingredients="{{ recipe.ingredients|join(', ') }}"
                                         data-instructions="{{ recipe.instructions }}">
                                     <i class="bi bi-clipboard"></i>
-                                    <span class="copy-text">Copy Recipe</span>
+                                    <span class="copy-text">{{ _('Copy Recipe') }}</span>
                                 </button>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <h5 class="section-title">
-                                        <i class="bi bi-list-check"></i>Ingredients
+                                        <i class="bi bi-list-check"></i>{{ _('Ingredients') }}
                                     </h5>
                                     <ul class="ingredient-list">
                                         {% for ingredient in recipe.ingredients %}
@@ -81,7 +81,7 @@
                                 {% if recipe.missing_ingredients %}
                                 <div class="mb-4">
                                     <h5 class="section-title text-danger">
-                                        <i class="bi bi-exclamation-triangle"></i>Missing Ingredients
+                                        <i class="bi bi-exclamation-triangle"></i>{{ _('Missing Ingredients') }}
                                     </h5>
                                     <ul class="ingredient-list missing-ingredients">
                                         {% for ingredient in recipe.missing_ingredients %}
@@ -95,7 +95,7 @@
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <h5 class="section-title">
-                                        <i class="bi bi-journal-text"></i>Instructions
+                                        <i class="bi bi-journal-text"></i>{{ _('Instructions') }}
                                     </h5>
                                     <div class="instructions">
                                         <ol>
@@ -117,7 +117,7 @@
             <div class="col-md-8 mx-auto">
                 <div class="alert alert-warning" role="alert">
                     <i class="bi bi-exclamation-triangle me-2"></i>
-                    No recipes found matching your ingredients{% if vegetarian_only %} and vegetarian filter{% endif %}. Try a different combination!
+                    {{ _('No recipes found matching your ingredients') }}{% if vegetarian_only %} {{ _('and vegetarian filter') }}{% endif %}. {{ _('Try a different combination!') }}
                 </div>
             </div>
         </div>
@@ -127,6 +127,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const favoriteButtons = document.querySelectorAll('.favorite-btn');
+    const currentLang = localStorage.getItem('selectedLanguage') || '{{ g.get("lang_code", "en") }}';
     
     favoriteButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -147,13 +148,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (heartIcon.classList.contains('bi-heart-fill')) {
                         heartIcon.classList.remove('bi-heart-fill');
                         heartIcon.classList.add('bi-heart');
-                        favoriteText.textContent = 'Save as Favorite';
+                        favoriteText.textContent = '{{ _('Save as Favorite') }}';
                         this.classList.remove('btn-primary');
                         this.classList.add('btn-outline-primary');
                     } else {
                         heartIcon.classList.remove('bi-heart');
                         heartIcon.classList.add('bi-heart-fill');
-                        favoriteText.textContent = 'Saved as Favorite';
+                        favoriteText.textContent = '{{ _('Saved as Favorite') }}';
                         this.classList.remove('btn-outline-primary');
                         this.classList.add('btn-primary');
                     }
@@ -171,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const instructions = this.dataset.instructions;
             
             // Format the recipe text
-            const recipeText = `${recipeName}\n\nIngredients:\n${ingredients}\n\nInstructions:\n${instructions}`;
+            const recipeText = `${recipeName}\n\n{{ _('Ingredients') }}:\n${ingredients}\n\n{{ _('Instructions') }}:\n${instructions}`;
             
             // Copy to clipboard
             navigator.clipboard.writeText(recipeText).then(() => {
@@ -181,17 +182,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 copyIcon.classList.remove('bi-clipboard');
                 copyIcon.classList.add('bi-clipboard-check');
-                copyText.textContent = 'Copied!';
+                copyText.textContent = '{{ _('Copied!') }}';
                 
                 // Reset after 2 seconds
                 setTimeout(() => {
                     copyIcon.classList.remove('bi-clipboard-check');
                     copyIcon.classList.add('bi-clipboard');
-                    copyText.textContent = 'Copy Recipe';
+                    copyText.textContent = '{{ _('Copy Recipe') }}';
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy recipe:', err);
-                alert('Failed to copy recipe to clipboard');
+                alert('{{ _('Failed to copy recipe to clipboard') }}');
             });
         });
     });
