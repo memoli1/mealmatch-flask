@@ -47,7 +47,7 @@ def get_recipe_emoji(recipe_title):
     # Default emoji for recipes without specific matches
     return '🍽️'
 
-app = Flask(__name__, template_folder='templates', static_folder='static')
+app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='/static')
 app.config['SECRET_KEY'] = 'your-secret-key-here'  # Change this to a secure secret key
 
 # Database configuration
@@ -579,10 +579,23 @@ def recipe_detail(id):
     return render_template('ricetta.html', recipe=recipe_data)
 
 @app.after_request
-def add_cors_headers(response):
+def add_header(response):
+    """
+    Add headers to disable caching and enable CORS for static files.
+    """
+    # Disable caching for all responses
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    
+    # CORS headers
     response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    """Explicitly serve static files."""
+    return send_from_directory(app.static_folder, filename)
 
 if __name__ == '__main__':
     init_db()
