@@ -6,3 +6,4 @@ Flask-Babel==2.0.0
 requests==2.26.0 
 gunicorn
 Werkzeug==2.3.7
+flask_migrate==4.0.5
