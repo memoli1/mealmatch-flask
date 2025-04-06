@@ -4,3 +4,12 @@ services:
     env: python
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn app:app"
+    envVars:
+      - key: SPOONACULAR_API_KEY
+        value: your-real-api-key
+      - key: FLASK_APP
+        value: app.py
+    disk:
+      name: sqlite-data
+      mountPath: /opt/render/project/src/instance
+      sizeGB: 1

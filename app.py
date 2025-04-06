@@ -51,10 +51,10 @@ app = Flask(__name__, template_folder='templates', static_folder='static', stati
 app.config['SECRET_KEY'] = 'your-secret-key-here'  # Change this to a secure secret key
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///recipes.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///instance/recipes.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    'connect_args': {'timeout': 15}  # Add timeout to prevent database lock issues
+    'connect_args': {'timeout': 30}  # Increased timeout for database connections
 }
 
 # Initialize extensions
@@ -62,6 +62,11 @@ db = SQLAlchemy(app)
 csrf = CSRFProtect(app)
 babel = Babel(app)
 migrate = Migrate(app, db)
+
+# Initialize database tables on startup
+with app.app_context():
+    db.create_all()
+    print("Database tables initialized on startup")
 
 # Add template globals
 app.jinja_env.globals['get_recipe_emoji'] = get_recipe_emoji
@@ -209,7 +214,7 @@ def init_db():
     try:
         print("Checking database...")
         with app.app_context():
-            # Only create tables if they don't exist
+            # Create tables if they don't exist
             db.create_all()
             print("Database tables verified.")
             
@@ -222,11 +227,26 @@ def init_db():
                 # Run the import_recipes.py script as a separate process to avoid circular imports
                 import subprocess
                 import sys
-                subprocess.run([sys.executable, 'import_recipes.py'])
+                try:
+                    subprocess.run([sys.executable, 'import_recipes.py'])
+                except Exception as e:
+                    print(f"Error importing recipes: {str(e)}")
     except Exception as e:
         print(f"Error checking database: {str(e)}")
         import traceback
         print(traceback.format_exc())
+        
+        # Attempt to create instance directory if it doesn't exist
+        import os
+        os.makedirs('instance', exist_ok=True)
+        
+        try:
+            print("Retrying database initialization...")
+            with app.app_context():
+                db.create_all()
+                print("Database tables created successfully after retry.")
+        except Exception as retry_error:
+            print(f"Failed to initialize database after retry: {str(retry_error)}")
 
 @app.route('/')
 def home():
