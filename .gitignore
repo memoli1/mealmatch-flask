@@ -33,4 +33,14 @@ ENV/
 .idea/
 .vscode/
 *.swp
-*.swo 
+*.swo
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# Flask
+migrations/
+flask_session/ 
