@@ -105,6 +105,10 @@ def before_request():
     g.locale = get_locale()
     g.lang_code = g.locale
     g.languages = app.config['LANGUAGES']
+    
+    # Set flask-babel locale for this request
+    if hasattr(g, 'lang_code'):
+        babel.locale_selector_func = lambda: g.lang_code
 
 # Add Jinja2 extensions
 app.jinja_env.add_extension('jinja2.ext.i18n')
@@ -214,7 +218,11 @@ def init_db():
             print(f"Found {recipe_count} recipes in the database.")
             
             if recipe_count == 0:
-                print("No recipes found. You may want to import some using import_recipes.py")
+                print("No recipes found. Importing recipes from recipes.json...")
+                # Run the import_recipes.py script as a separate process to avoid circular imports
+                import subprocess
+                import sys
+                subprocess.run([sys.executable, 'import_recipes.py'])
     except Exception as e:
         print(f"Error checking database: {str(e)}")
         import traceback
@@ -349,7 +357,12 @@ def add_recipe():
             title_en=data['title_en'],
             ingredients_en=json.dumps(data['ingredients_en']),
             instructions_en=json.dumps(data['instructions_en']),
+            title_it=data.get('title_it'),
+            ingredients_it=json.dumps(data['ingredients_it']) if 'ingredients_it' in data else None,
+            instructions_it=json.dumps(data['instructions_it']) if 'instructions_it' in data else None,
             vegetarian=data.get('vegetarian', False),
+            vegan=data.get('vegan', False),
+            category=data.get('category', 'quick-meals'),
             image_url=data.get('image_url'),
             source_url=data.get('source_url')
         )
@@ -418,7 +431,7 @@ def manage_favorite(recipe_id):
 
 # Recipe categories
 RECIPE_CATEGORIES = {
-    'tradizioni-italiane': _('Italian Traditions'),
+    'italian-traditions': _('Italian Traditions'),
     'healthy': _('Healthy'),
     'quick-meals': _('Quick Meals'),
     'vegetarian': _('Vegetarian'),
@@ -432,6 +445,9 @@ def ricettario():
     per_page = 12  # Show more recipes per page
     search_query = request.args.get('q', '').strip()
     selected_category = request.args.get('category', '')
+    
+    # Get current language
+    lang = g.get('lang_code', 'en')
     
     # Base query
     query = Recipe.query
@@ -453,12 +469,12 @@ def ricettario():
         query = query.filter_by(vegetarian=True)
     elif selected_category == 'vegan':
         query = query.filter_by(vegan=True)
-    elif selected_category == 'tradizioni-italiane':
-        # Filter for Italian traditional recipes - look for recipes with category='tradizioni-italiane' first,
+    elif selected_category == 'italian-traditions':
+        # Filter for Italian traditional recipes - look for recipes with category='italian-traditions' first,
         # then fallback to recipes that have Italian titles
         query = query.filter(
             db.or_(
-                Recipe.category == 'tradizioni-italiane',
+                Recipe.category == 'italian-traditions',
                 Recipe.title_it.isnot(None)
             )
         )
@@ -467,7 +483,16 @@ def ricettario():
         query = query.filter_by(category=selected_category)
     
     # Add consistent sorting to ensure pagination works correctly
-    query = query.order_by(Recipe.id.asc())
+    if lang == 'it':
+        # Sort by Italian title if available, fall back to English title
+        query = query.order_by(
+            db.case(
+                (Recipe.title_it.isnot(None), Recipe.title_it),
+                else_=Recipe.title_en
+            ).asc()
+        )
+    else:
+        query = query.order_by(Recipe.title_en.asc())
     
     # Get total count for stats
     total_recipes = query.count()
@@ -481,7 +506,7 @@ def ricettario():
     
     # Group recipes by category for display
     categorized_recipes = {
-        'tradizioni-italiane': [],
+        'italian-traditions': [],
         'healthy': [],
         'quick-meals': [],
         'vegetarian': [],
@@ -494,8 +519,8 @@ def ricettario():
     
     for recipe in all_recipes:
         # Assign recipes to categories based on their attributes
-        if recipe.category == 'tradizioni-italiane' or recipe.title_it:
-            categorized_recipes['tradizioni-italiane'].append(recipe)
+        if recipe.category == 'italian-traditions' or recipe.title_it:
+            categorized_recipes['italian-traditions'].append(recipe)
         elif recipe.category:
             if recipe.category in categorized_recipes:
                 categorized_recipes[recipe.category].append(recipe)
@@ -504,11 +529,21 @@ def ricettario():
         if recipe.vegan:
             categorized_recipes['vegan'].append(recipe)
     
+    # Create translated category display names for the view
+    translated_categories = {}
+    for key, value in RECIPE_CATEGORIES.items():
+        if key == 'italian-traditions':
+            # This category name is already in Italian, use as is
+            translated_categories[key] = value
+        else:
+            # Translate other categories according to the selected language
+            translated_categories[key] = _(value)
+    
     return render_template(
         'ricettario.html',
         recipes=recipes,
         categorized_recipes=categorized_recipes,
-        categories=RECIPE_CATEGORIES,
+        categories=translated_categories,
         search_query=search_query,
         selected_category=selected_category,
         current_page=page,
@@ -542,6 +577,12 @@ def recipe_detail(id):
     }
     
     return render_template('ricetta.html', recipe=recipe_data)
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    return response
 
 if __name__ == '__main__':
     init_db()

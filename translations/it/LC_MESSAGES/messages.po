@@ -135,3 +135,54 @@ msgstr "Prova una combinazione diversa!"
 msgid "Failed to copy recipe to clipboard"
 msgstr "Impossibile copiare la ricetta negli appunti"
 
+msgid "Italian Traditions"
+msgstr "Tradizioni Italiane"
+
+msgid "Healthy"
+msgstr "Salutare"
+
+msgid "Quick Meals"
+msgstr "Piatti Veloci"
+
+msgid "Desserts"
+msgstr "Dolci"
+
+msgid "Vegan"
+msgstr "Vegano"
+
+msgid "Showing"
+msgstr "Mostrando"
+
+msgid "of"
+msgstr "di"
+
+msgid "recipes"
+msgstr "ricette"
+
+msgid "Prep time"
+msgstr "Tempo di preparazione"
+
+msgid "Cook time"
+msgstr "Tempo di cottura"
+
+msgid "min"
+msgstr "min"
+
+msgid "All Recipes"
+msgstr "Tutte le Ricette"
+
+msgid "Recipe Book"
+msgstr "Ricettario"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Favorites"
+msgstr "Preferiti"
+
+msgid "Search recipes by name or ingredients..."
+msgstr "Cerca ricette per nome o ingredienti..."
+
+msgid "Back to Recipe Book"
+msgstr "Torna al Ricettario"
+

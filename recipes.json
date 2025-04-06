@@ -1,47 +1,137 @@
 {
     "recipes": [
-        {
-            "title": "Classic Spaghetti Carbonara",
-            "ingredients": [
-                "350g spaghetti",
-                "150g pancetta",
-                "3 large eggs",
-                "75g Pecorino Romano",
-                "50g Parmigiano Reggiano",
-                "2 cloves garlic",
-                "black pepper",
-                "salt"
-            ],
-            "instructions": "1. Cook pasta in salted water\n2. Fry pancetta until crispy\n3. Beat eggs with cheese and pepper\n4. Toss hot pasta with pancetta\n5. Mix in egg mixture off heat\n6. Serve immediately with more cheese",
-            "vegetarian": false,
-            "image_url": "https://blog.giallozafferano.it/dulcisinforno/wp-content/uploads/2021/03/Carbonara-ricetta-5328.jpg"
-        },
-        {
-            "title": "Spaghetti all'Amatriciana",
-            "ingredients": [
-              "400g spaghetti",
-              "150g guanciale",
-              "400g peeled tomatoes",
-              "50g Pecorino Romano",
-              "1 red chili (optional)",
-              "2 tbsp olive oil",
-              "salt"
-            ],
-            "instructions": "1. Cut guanciale into strips and sauté in olive oil until crispy\n2. Add chili and peeled tomatoes, simmer for 10-15 minutes\n3. Cook spaghetti in salted water\n4. Mix pasta with sauce and add Pecorino Romano\n5. Serve hot with more cheese if desired",
-            "vegetarian": false,
-            "image_url": "https://www.lacucinaitaliana.it/content/uploads/2021/09/amatriciana.jpg"
-          },
-          {
-            "title": "Tonnarelli Cacio e Pepe",
-            "ingredients": [
-              "400g tonnarelli (or spaghetti)",
-              "200g Pecorino Romano",
-              "2 tsp freshly ground black pepper",
-              "salt"
-            ],
-            "instructions": "1. Cook pasta in salted water\n2. Reserve some pasta water\n3. Mix grated cheese with black pepper\n4. Add hot pasta to cheese mixture\n5. Add a bit of pasta water to create creamy sauce\n6. Serve immediately with more pepper",
-            "vegetarian": true,
-            "image_url": "https://blog.giallozafferano.it/dulcisinforno/wp-content/uploads/2020/05/Cacio-e-pepe-ricetta-7697.jpg"
-          }
+      {
+        "title": "Classic Spaghetti Carbonara",
+        "title_it": "Spaghetti alla Carbonara",
+        "ingredients": [
+          "350g spaghetti",
+          "150g pancetta", 
+          "3 large eggs", 
+          "75g Pecorino Romano", 
+          "50g Parmigiano Reggiano", 
+          "2 cloves garlic", 
+          "black pepper", 
+          "salt"
+        ],
+        "ingredients_it": [
+          "350g spaghetti", 
+          "150g pancetta", 
+          "3 uova grandi", 
+          "75g Pecorino Romano", 
+          "50g Parmigiano Reggiano", 
+          "2 spicchi d'aglio", 
+          "pepe nero", 
+          "sale"
+        ],
+        "instructions": [
+          "Cook pasta in salted water",
+          "Fry pancetta until crispy",
+          "Beat eggs with cheese and pepper",
+          "Toss hot pasta with pancetta",
+          "Mix in egg mixture off heat",
+          "Serve immediately with more cheese"
+        ],
+        "instructions_it": [
+          "Cuocere la pasta in acqua salata",
+          "Friggere la pancetta fino a renderla croccante",
+          "Sbattere le uova con il formaggio e il pepe",
+          "Mescolare la pasta calda con la pancetta",
+          "Aggiungere il composto di uova fuori dal fuoco",
+          "Servire immediatamente con altro formaggio"
+        ],
+        "vegetarian": false,
+        "vegan": false,
+        "category": "italian-traditions",
+        "prep_time": 10,
+        "cook_time": 15,
+        "image_url": "https://blog.giallozafferano.it/dulcisinforno/wp-content/uploads/2021/03/Carbonara-ricetta-5328.jpg",
+        "source_url": "",
+        "created_at": "2025-04-06T21:00:00"
+      },
+      {
+        "title": "Spaghetti all'Amatriciana",
+        "title_it": "Spaghetti all'Amatriciana",
+        "ingredients": [
+          "400g spaghetti", 
+          "150g guanciale", 
+          "400g peeled tomatoes", 
+          "50g Pecorino Romano", 
+          "1 red chili (optional)", 
+          "2 tbsp olive oil", 
+          "salt"
+        ],
+        "ingredients_it": [
+          "400g spaghetti", 
+          "150g guanciale", 
+          "400g pomodori pelati", 
+          "50g Pecorino Romano", 
+          "1 peperoncino rosso (facoltativo)", 
+          "2 cucchiai olio d'oliva", 
+          "sale"
+        ],
+        "instructions": [
+          "Cut guanciale into strips and sauté in olive oil until crispy",
+          "Add chili and peeled tomatoes, simmer for 10-15 minutes",
+          "Cook spaghetti in salted water",
+          "Mix pasta with sauce and add Pecorino Romano",
+          "Serve hot with more cheese if desired"
+        ],
+        "instructions_it": [
+          "Tagliare il guanciale a listarelle e soffriggerlo nell'olio d'oliva fino a renderlo croccante",
+          "Aggiungere il peperoncino e i pomodori pelati, cuocere per 10-15 minuti",
+          "Cuocere gli spaghetti in acqua salata",
+          "Mescolare la pasta con il sugo e aggiungere il Pecorino Romano",
+          "Servire caldo con altro formaggio se desiderato"
+        ],
+        "vegetarian": false,
+        "vegan": false,
+        "category": "italian-traditions",
+        "prep_time": 10,
+        "cook_time": 20,
+        "image_url": "https://www.lacucinaitaliana.it/content/uploads/2021/09/amatriciana.jpg",
+        "source_url": "",
+        "created_at": "2025-04-06T21:00:00"
+      },
+      {
+        "title": "Tonnarelli Cacio e Pepe",
+        "title_it": "Tonnarelli Cacio e Pepe",
+        "ingredients": [
+          "400g tonnarelli (or spaghetti)", 
+          "200g Pecorino Romano", 
+          "2 tsp freshly ground black pepper", 
+          "salt"
+        ],
+        "ingredients_it": [
+          "400g tonnarelli (o spaghetti)", 
+          "200g Pecorino Romano", 
+          "2 cucchiaini di pepe nero macinato fresco", 
+          "sale"
+        ],
+        "instructions": [
+          "Cook pasta in salted water",
+          "Reserve some pasta water",
+          "Mix grated cheese with black pepper",
+          "Add hot pasta to cheese mixture",
+          "Add a bit of pasta water to create creamy sauce",
+          "Serve immediately with more pepper"
+        ],
+        "instructions_it": [
+          "Cuocere la pasta in acqua salata",
+          "Conservare un po' d'acqua di cottura",
+          "Mescolare il formaggio grattugiato con il pepe nero",
+          "Aggiungere la pasta calda al composto di formaggio",
+          "Aggiungere un po' d'acqua di cottura per creare una salsa cremosa",
+          "Servire immediatamente con altro pepe"
+        ],
+        "vegetarian": true,
+        "vegan": false,
+        "category": "italian-traditions",
+        "prep_time": 5,
+        "cook_time": 15,
+        "image_url": "https://blog.giallozafferano.it/dulcisinforno/wp-content/uploads/2020/05/Cacio-e-pepe-ricetta-7697.jpg",
+        "source_url": "",
+        "created_at": "2025-04-06T21:00:00"
+      }
     ]
-} 
+  }
+  
